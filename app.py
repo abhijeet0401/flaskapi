@@ -153,7 +153,7 @@ class Save(Resource):
         
         count = 1
         
-        if db.child("Network").get() is None:
+        if db.child("Network").get().val() is None:
             item = {"from":transFrom , "to":transTo,"Transactions":count}
             db.child("Network").push(item)
             retJson = {
@@ -189,7 +189,7 @@ class Save(Resource):
 class TransHistory(Resource):
     def get(self):
         history = []
-        if db.child("Network").get().val() is None:
+        if db.child("Transaction").get().val() is None:
             return jsonify(history)
         else:
             for transhistory in db.child("Transaction").get().each():
