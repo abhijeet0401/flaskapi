@@ -1,0 +1,5 @@
+Flask
+flask_restful
+pyrebase4
+gunicorn
+flask-cors
