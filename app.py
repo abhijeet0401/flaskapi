@@ -29,7 +29,7 @@ CORS(app)
 firebase = pyrebase.initialize_app(config)
 
 db = firebase.database()
-db.child("Network")
+
 class From(Resource):
     def post(self):
         postedData = request.get_json()
@@ -152,13 +152,17 @@ class Save(Resource):
         db.child("Transaction").push(historyTrans)
         
         count = 1
-        db.child("Network")
-        if db.child("Network").get().val() is None:
+        
+        if db.child("Network").get() is None:
             item = {"from":transFrom , "to":transTo,"Transactions":count}
             db.child("Network").push(item)
+            retJson = {
+        "Message": "Succesfully Added create",
+        "Status Code": 200
+        }
+            return jsonify(retJson)
 
-
-        else:
+        else :
             for newtrans in db.child("Network").get().each():
                 print(newtrans.val())
 
@@ -168,15 +172,20 @@ class Save(Resource):
                 if( check1==transFrom  and check2 == transTo):
                     transcounter += 1
                     db.child("Network").child(newtrans.key()).update({"from": transFrom, "to":transTo, "Transactions":transcounter})
-                else:
-                    item = {"from":transFrom , "to":transTo,"Transactions":count}
-                    db.child("Network").push(item)
+                    retJson = {
+"Message": "Succesfully Added count increased",
+"Status Code": 200
+}
+                    return jsonify(retJson)
+                
+            item = {"from":transFrom , "to":transTo,"Transactions":count}
+            db.child("Network").push(item)
 
-        retJson = {
-        "Message": "Succesfully Added",
-        "Status Code": 200
-        }
-        return jsonify(retJson)
+            retJson = {
+            "Message": "Succesfully Added  to new",
+            "Status Code": 200
+            }
+            return jsonify(retJson)
 class TransHistory(Resource):
     def get(self):
         history = []
