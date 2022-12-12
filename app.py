@@ -180,11 +180,14 @@ class Save(Resource):
 class TransHistory(Resource):
     def get(self):
         history = []
-        for transhistory in db.child("Transaction").get().each():
-            print(transhistory.val())
-            history.append(transhistory.val())
-        history.reverse()
-        return jsonify(history)
+        if db.child("Network").get().val() is None:
+            return jsonify(history)
+        else:
+            for transhistory in db.child("Transaction").get().each():
+                print(transhistory.val())
+                history.append(transhistory.val())
+            history.reverse()
+            return jsonify(history)
 
 
 api.add_resource(Save, '/save')
